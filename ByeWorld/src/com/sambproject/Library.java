@@ -13,6 +13,7 @@ public class Library {
 //    переместить книгу на другую полку, поиск книг по разным признакам (по автору, по названию,
 //    по словам из названия, по жанру, по коду полки, по комбинации этих признаков).
 
+
     HashMap<Integer, Book> lib = new HashMap<>();
 
     HashMap<String, Integer> shelves = new HashMap<>();
@@ -21,14 +22,37 @@ public class Library {
     int id = 0;
     public Library(Book[] books) {
         for (Book book : books) {
-            lib.put(id, book);
-            id++;
+            updateLib(book);
         }
     }
 
-    public void addBook(String name, String author, String genre, String shelf) {
-        Book book = new Book(name, author, genre, shelf);
+    public void showAllBooks() {
+        for (int key : lib.keySet()) {
+            lib.get(key).showBook();
+        }
+    }
+
+    public void addBook(Book book) {
+        System.out.println(book.shelf);
+        updateLib(book);
+    }
+
+    public void changeShelf(int id, String shelf) {
+        Book book = lib.get(id);
+        addOnShelf(book, shelf);
+    }
+
+    private void addOnShelf(Book book, String shelf) {
+        int index = shelves.getOrDefault(shelf, 1);
+        book.shelf = shelf + index;
+        index++;
+        shelves.put(shelf, index);
+    }
+
+    private void updateLib(Book book) {
+        addOnShelf(book, book.shelf);
         lib.put(id, book);
+        book.id = id;
         id++;
     }
 
@@ -37,8 +61,6 @@ public class Library {
         if (!newName.isEmpty()) bookToChange.name = newName;
         if (!newAuthor.isEmpty()) bookToChange.author = newName;
         if (!newGenre.isEmpty()) bookToChange.genre = newName;
-        System.out.println("Теперь эта книга выглядит так: ");
-        bookToChange.showBook();
     }
 
     public void deleteBook(String name, String author, String genre, String shelf) {
@@ -102,4 +124,3 @@ public class Library {
     }
 
 }
-
